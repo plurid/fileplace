@@ -57,8 +57,6 @@ pub async fn run(
     listener: TcpListener,
     data_path: String,
 ) -> Result<Server, anyhow::Error> {
-    dbg!(data_path.clone());
-
     let server = HttpServer::new(move || {
             App::new()
                 .wrap(TracingLogger::default())
