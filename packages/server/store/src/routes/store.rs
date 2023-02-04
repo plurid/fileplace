@@ -1,6 +1,5 @@
 use std::fs;
-use actix_web::{HttpResponse, ResponseError};
-use actix_web::http::StatusCode;
+use actix_web::HttpResponse;
 use actix_easy_multipart::tempfile::Tempfile;
 use actix_easy_multipart::MultipartForm;
 use mime_guess::get_mime_extensions;

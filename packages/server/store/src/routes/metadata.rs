@@ -1,4 +1,4 @@
-use actix_web::{web, HttpResponse, Error};
+use actix_web::{web, Error};
 use serde_json::Value;
 use std::fs;
 use std::path::Path;
@@ -25,9 +25,15 @@ pub async fn metadata(
         owner,
     } = extract_query_params(query);
 
-    let address = Path::new(data_path.as_str())
-        .join(place)
-        .join(name);
+    let address;
+    if owner.is_empty() {
+        address = Path::new(data_path.as_str())
+            .join(place).join(name);
+    } else {
+        address = Path::new(data_path.as_str())
+            .join(owner).join(place).join(name);
+    }
+
     let data: String = String::from_utf8_lossy(&fs::read(address)?).parse()?;
     let value: Value = serde_json::from_str(&data)?;
 
