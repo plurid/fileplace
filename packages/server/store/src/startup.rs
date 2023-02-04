@@ -5,6 +5,8 @@ use actix_web::{
     App,
 };
 use actix_web::dev::Server;
+use tracing_actix_web::TracingLogger;
+
 use crate::configuration::Settings;
 use crate::routes::{
     get,
@@ -27,10 +29,12 @@ impl Application {
         configuration: Settings,
     ) -> Result<Self, anyhow::Error> {
         let address = format!("{}:{}", configuration.application.host, configuration.application.port);
+
         let listener = TcpListener::bind(address)?;
         let port = listener.local_addr().unwrap().port();
         let server = run(
             listener,
+            configuration.data_path,
         ).await?;
 
         Ok(Self { port, server })
@@ -51,14 +55,21 @@ impl Application {
 
 pub async fn run(
     listener: TcpListener,
+    data_path: String,
 ) -> Result<Server, anyhow::Error> {
+    dbg!(data_path.clone());
+
     let server = HttpServer::new(move || {
             App::new()
+                .wrap(TracingLogger::default())
+
                 .route("/get", web::get().to(get))
                 .route("/metadata", web::get().to(metadata))
                 .route("/remove", web::get().to(remove))
                 .route("/store", web::post().to(store))
                 .route("/exists", web::get().to(exists))
+
+                .app_data(web::Data::new(data_path.clone()))
         })
         .listen(listener)?
         .run();

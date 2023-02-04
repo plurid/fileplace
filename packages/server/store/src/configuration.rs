@@ -11,6 +11,7 @@ pub struct Settings {
     pub application: ApplicationSettings,
     #[serde(deserialize_with = "deserialize_bool_from_anything")]
     pub ownable: bool,
+    pub data_path: String,
 }
 
 

@@ -8,8 +8,13 @@ use crate::routes::utils::{
 
 
 
+#[tracing::instrument(
+    name = "get metadata",
+    skip(query, data_path),
+)]
 pub async fn metadata(
     query: web::Query<QueryData>,
+    data_path: web::Data<String>,
 ) -> HttpResponse {
     let ParsedQueryData {
         place,
