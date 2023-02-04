@@ -1,0 +1,67 @@
+{
+    "name": "@plurid/fileplace",
+    "version": "0.0.0-0",
+    "description": "Cloud Service Client for Centralized File Store",
+    "keywords": [
+        "fileplace",
+        "client"
+    ],
+    "author": "ly3xqhl8g9 <ly3xqhl8g9@plurid.com> (https://plurid.com)",
+    "license": "SEE LICENSE IN LICENSE",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/plurid/fileplace"
+    },
+    "bugs": {
+        "email": "source@plurid.com",
+        "url": "https://github.com/plurid/fileplace/issues"
+    },
+    "homepage": "https://github.com/plurid/fileplace/tree/master/packages/fileplace-client/fileplace-javascript",
+    "publishConfig": {
+        "registry": "https://registry.npmjs.org/",
+        "access": "public"
+    },
+    "engines": {
+        "node": ">=18",
+        "npm": ">=8"
+    },
+    "type": "module",
+    "main": "distribution/index.js",
+    "module": "distribution/index.es.js",
+    "typings": "distribution/index.d.ts",
+    "files": [
+        "distribution"
+    ],
+    "scripts": {
+        "test": "jest -c ./configurations/jest.config.js --coverage ./source",
+        "runner": "runner tests",
+        "build.removeTests": "rm -rf `find ./distribution/ -type d -name __tests__`",
+        "build.types": "ttsc --emitDeclarationOnly",
+        "build.production": "node scripts/build.js",
+        "build": "pnpm build.production && pnpm build.types && pnpm build.removeTests",
+        "prebuild": "rm -rf distribution",
+        "prepublishOnly": "pnpm build"
+    },
+    "peerDependencies": {
+        "cross-fetch": ">=3.1"
+    },
+    "devDependencies": {
+        "@plurid/runner": "^0.0.0-9",
+        "@types/jest": "^29.4.0",
+        "@types/node": "^18.11.18",
+        "@typescript-eslint/eslint-plugin": "^5.50.0",
+        "@typescript-eslint/parser": "^5.50.0",
+        "@zerollup/ts-transform-paths": "^1.7.18",
+        "cross-fetch": "^3.1.5",
+        "esbuild": "^0.17.5",
+        "eslint": "^8.33.0",
+        "jest": "^29.4.1",
+        "jest-config": "^29.4.1",
+        "ts-jest": "^29.0.5",
+        "ts-node": "^10.9.1",
+        "tslib": "^2.5.0",
+        "ttypescript": "^1.5.15",
+        "typescript": "^4.9.5",
+        "typescript-transform-paths": "^3.4.6"
+    }
+}
