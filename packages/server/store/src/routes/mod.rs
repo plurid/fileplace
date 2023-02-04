@@ -3,6 +3,7 @@ mod metadata;
 mod remove;
 mod store;
 mod exists;
+mod utils;
 
 
 pub use get::*;
