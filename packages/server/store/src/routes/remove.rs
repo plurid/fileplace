@@ -10,6 +10,7 @@ use crate::routes::utils::{
 
 pub async fn remove(
     query: web::Query<QueryData>,
+    data_path: web::Data<String>,
 ) -> HttpResponse {
     let ParsedQueryData {
         place,

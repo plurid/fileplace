@@ -1,5 +1,6 @@
 use std::fs;
-use actix_web::HttpResponse;
+use std::path::Path;
+use actix_web::{web, HttpResponse};
 use actix_easy_multipart::tempfile::Tempfile;
 use actix_easy_multipart::MultipartForm;
 use mime_guess::get_mime_extensions;
@@ -14,7 +15,14 @@ pub struct Upload {
 }
 
 
-pub async fn store(form: MultipartForm<Upload>) -> HttpResponse {
+#[tracing::instrument(
+    name = "store",
+    skip(form, data_path),
+)]
+pub async fn store(
+    form: MultipartForm<Upload>,
+    data_path: web::Data<String>,
+) -> HttpResponse {
     let temp_file = &form.files[0];
     let named_temp_file = &temp_file.file;
     let temp_path =  named_temp_file.path().as_os_str();
@@ -32,7 +40,9 @@ pub async fn store(form: MultipartForm<Upload>) -> HttpResponse {
         None => String::new(),
     };
     let filename = Uuid::new_v4();
-    let path = format!("{}.{}", filename, content_type.clone());
+    let filename_ext = format!("{}.{}", filename, content_type.clone());
+    let path = Path::new(data_path.as_str())
+        .join(filename_ext);
 
     match fs::rename(
         temp_path,

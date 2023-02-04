@@ -25,12 +25,13 @@ pub async fn metadata(
         owner,
     } = extract_query_params(query);
 
+    let data_path = data_path.as_str();
     let address;
-    if owner.is_empty() {
-        address = Path::new(data_path.as_str())
+    if owner.trim().is_empty() {
+        address = Path::new(data_path)
             .join(place).join(name);
     } else {
-        address = Path::new(data_path.as_str())
+        address = Path::new(data_path)
             .join(owner).join(place).join(name);
     }
 

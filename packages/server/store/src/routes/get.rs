@@ -11,6 +11,7 @@ use crate::routes::utils::{
 
 pub async fn get(
     query: web::Query<QueryData>,
+    data_path: web::Data<String>,
 ) -> HttpResponse {
     let ParsedQueryData {
         place,
