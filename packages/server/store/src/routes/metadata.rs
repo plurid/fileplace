@@ -1,4 +1,7 @@
-use actix_web::{web, HttpResponse};
+use actix_web::{web, HttpResponse, Error};
+use serde_json::Value;
+use std::fs;
+use std::path::Path;
 
 use crate::routes::utils::{
     QueryData,
@@ -15,12 +18,18 @@ use crate::routes::utils::{
 pub async fn metadata(
     query: web::Query<QueryData>,
     data_path: web::Data<String>,
-) -> HttpResponse {
+) -> Result<web::Json<Value>, Error> {
     let ParsedQueryData {
         place,
         name,
         owner,
     } = extract_query_params(query);
 
-    HttpResponse::Ok().into()
+    let address = Path::new(data_path.as_str())
+        .join(place)
+        .join(name);
+    let data: String = String::from_utf8_lossy(&fs::read(address)?).parse()?;
+    let value: Value = serde_json::from_str(&data)?;
+
+    Ok(web::Json(value.clone()))
 }
