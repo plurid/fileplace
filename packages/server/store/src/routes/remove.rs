@@ -1,10 +1,12 @@
 use std::fs;
+use std::path::Path;
 use actix_web::{web, HttpResponse};
 
 use crate::routes::utils::{
     QueryData,
     extract_query_params,
     compose_file_path,
+    compose_metadata_path,
 };
 
 
@@ -22,11 +24,14 @@ pub async fn remove(
         data_path,
     );
 
-    if !path.exists() {
+    let metadata_file = compose_metadata_path(path.clone());
+    let metadata_path = Path::new(metadata_file.as_str());
+
+    if !path.exists() || !metadata_path.exists() {
         return HttpResponse::NotFound().into();
     }
-
-    let _ = fs::remove_file(path);
+    let _ = fs::remove_file(path.clone());
+    let _ = fs::remove_file(metadata_path.clone());
 
     HttpResponse::Ok().into()
 }

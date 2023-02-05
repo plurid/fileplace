@@ -93,3 +93,17 @@ pub fn make_directory(
         fs::create_dir_all(directory).expect("Failed to create directory");
     }
 }
+
+
+
+pub const METADATA_ENDING: &str = ".metadata";
+
+pub fn compose_metadata_path (
+    path: PathBuf,
+) -> String {
+    let mut metadata_path = path.to_str().unwrap()
+        .to_owned();
+    metadata_path.push_str(METADATA_ENDING);
+
+    metadata_path
+}

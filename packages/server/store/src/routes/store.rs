@@ -15,6 +15,7 @@ use crate::routes::utils::{
     extract_store_query_params,
     compose_file_path,
     make_directory,
+    compose_metadata_path,
 };
 
 
@@ -25,18 +26,6 @@ pub struct Upload {
     pub files: Vec<Tempfile>,
 }
 
-
-const METADATA_ENDING: &str = ".metadata";
-
-pub fn compose_metadata_path (
-    path: PathBuf,
-) -> String {
-    let mut metadata_path = path.to_str().unwrap()
-        .to_owned();
-    metadata_path.push_str(METADATA_ENDING);
-
-    metadata_path
-}
 
 pub async fn write_metadata(
     path: PathBuf,
