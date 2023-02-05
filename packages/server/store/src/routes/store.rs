@@ -1,9 +1,6 @@
 use std::fs;
-use std::fs::File;
 use std::path::{Path, PathBuf};
 use std::io::prelude::*;
-use actix_web::body::MessageBody;
-use actix_web::cookie::time::ext::NumericalDuration;
 use actix_web::{web, Result, HttpResponse};
 use actix_easy_multipart::tempfile::Tempfile;
 use actix_easy_multipart::MultipartForm;
@@ -13,7 +10,6 @@ use mime_guess::get_mime_extensions;
 use uuid::Uuid;
 
 use crate::routes::utils::{
-    QueryData,
     StoreQueryData,
     ParsedQueryData,
     extract_store_query_params,
@@ -115,8 +111,12 @@ pub async fn store(
             .join(filename);
     }
 
-    let size = temp_file.size;
+    let directory = path.parent().unwrap_or(Path::new("./"));
+    if !directory.exists() {
+        fs::create_dir_all(directory).expect("Failed to create directory");
+    }
 
+    let size = temp_file.size;
     let _ = write_metadata(
         path.clone(), size,
     ).await;
