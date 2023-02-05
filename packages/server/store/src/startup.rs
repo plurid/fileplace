@@ -10,6 +10,7 @@ use tracing_actix_web::TracingLogger;
 use crate::configuration::Settings;
 use crate::routes::{
     get,
+    all,
     metadata,
     remove,
     store,
@@ -62,6 +63,7 @@ pub async fn run(
                 .wrap(TracingLogger::default())
 
                 .route("/get", web::get().to(get))
+                .route("/all", web::get().to(all))
                 .route("/metadata", web::get().to(metadata))
                 .route("/remove", web::get().to(remove))
                 .route("/store", web::post().to(store))

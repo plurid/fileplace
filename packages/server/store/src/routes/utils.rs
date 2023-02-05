@@ -19,6 +19,13 @@ pub struct StoreQueryData {
     pub owner: Option<String>,
 }
 
+#[derive(Debug, Serialize, Deserialize)]
+pub struct AllQueryData {
+    pub place: String,
+    pub owner: Option<String>,
+    pub cursor: Option<u128>,
+}
+
 pub struct ParsedQueryData {
     pub place: String,
     pub name: String,
