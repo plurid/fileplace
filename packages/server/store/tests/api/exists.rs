@@ -11,7 +11,6 @@ async fn file_does_not_exist() {
     assert_eq!(
         404,
         response.status().as_u16(),
-        // Additional customised error message on test failure
         "The API did not fail with 404 Not Found",
     );
 }

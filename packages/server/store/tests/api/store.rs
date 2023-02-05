@@ -2,9 +2,21 @@ use crate::helpers::spawn_app;
 
 
 
-#[tokio::test]
-async fn it_stores_file() {
-    let _app = spawn_app().await;
+const TEST_FILE_PNG: &str = "./tests/api/assets/file.png";
 
-    assert_eq!("ok", "ok");
+
+#[tokio::test]
+async fn store_file() {
+    let app = spawn_app().await;
+
+    let response = app.store("one", "two.png", TEST_FILE_PNG).await;
+
+    assert_eq!(
+        200,
+        response.status().as_u16(),
+        "The API did not succeed with 200 OK",
+    );
+
+    let _ = std::fs::remove_file("./data/one/two.png");
+    let _ = std::fs::remove_file("./data/one/two.png.metadata");
 }

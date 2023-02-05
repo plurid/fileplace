@@ -65,7 +65,7 @@ pub async fn run(
                 .route("/get", web::get().to(get))
                 .route("/all", web::get().to(all))
                 .route("/metadata", web::get().to(metadata))
-                .route("/remove", web::get().to(remove))
+                .route("/remove", web::post().to(remove))
                 .route("/store", web::post().to(store))
                 .route("/exists", web::get().to(exists))
 

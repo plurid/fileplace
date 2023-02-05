@@ -1,4 +1,5 @@
 use urlencoding::encode;
+use reqwest::multipart;
 
 use fileplace_store::configuration::get_configuration;
 use fileplace_store::startup::Application;
@@ -23,6 +24,33 @@ impl TestApp {
                 "{}/exists?place={}&name={}",
                 &self.address, encode(place), encode(name),
             ))
+            .send()
+            .await
+            .expect("Failed to execute request.")
+    }
+
+    pub async fn store(
+        &self,
+        place: &str,
+        name: &str,
+        file: &str,
+    ) -> reqwest::Response {
+        let mime_str = "image/png";
+        let file_part = multipart::Part::bytes(
+                std::fs::read(file).unwrap(),
+            )
+            .file_name(name.clone().to_owned())
+            .mime_str(mime_str)
+            .unwrap();
+        let form = multipart::Form::new()
+            .part("files[]", file_part);
+
+        self.api_client
+            .post(&format!(
+                "{}/store?place={}&name={}",
+                &self.address, encode(place), encode(name),
+            ))
+            .multipart(form)
             .send()
             .await
             .expect("Failed to execute request.")
