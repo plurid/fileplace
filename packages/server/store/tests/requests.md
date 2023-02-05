@@ -24,3 +24,12 @@ curl -v http://127.0.0.1:56165/remove?place=two&name="a_file.png"
 # All
 
 curl -v http://127.0.0.1:56165/all?owner=one&place=two
+
+curl -v http://127.0.0.1:56165/all?place=two
+
+
+# Get
+
+curl -v http://127.0.0.1:56165/get?owner=one&place=two&name="a_file.png" -o a_file.png
+
+curl -v http://127.0.0.1:56165/get?place=two&name="a_file.png" -o a_file.png
