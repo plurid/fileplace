@@ -35,6 +35,15 @@ pub async fn all(
             .join(place)
     }
 
+    if !path.exists() {
+        let value = json!({
+            "status": false,
+            "files": [],
+        });
+
+        return Ok(web::Json(value.clone()));
+    }
+
     let mut files: Vec<String> = Vec::new();
     for file in fs::read_dir(path).unwrap() {
         let os_string = file.unwrap().file_name();
@@ -46,6 +55,7 @@ pub async fn all(
     }
 
     let value = json!({
+        "status": true,
         "files": files,
     });
 
