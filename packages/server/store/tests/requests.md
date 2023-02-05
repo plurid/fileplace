@@ -19,3 +19,8 @@ curl -v http://127.0.0.1:56165/exists?place=two&name="a_file.png"
 curl -v http://127.0.0.1:56165/remove?owner=one&place=two&name="a_file.png"
 
 curl -v http://127.0.0.1:56165/remove?place=two&name="a_file.png"
+
+
+# All
+
+curl -v http://127.0.0.1:56165/all?owner=one&place=two
