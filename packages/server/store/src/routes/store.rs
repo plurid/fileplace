@@ -12,6 +12,13 @@ use serde_json::json;
 use mime_guess::get_mime_extensions;
 use uuid::Uuid;
 
+use crate::routes::utils::{
+    QueryData,
+    StoreQueryData,
+    ParsedQueryData,
+    extract_store_query_params,
+};
+
 
 
 #[derive(MultipartForm)]
@@ -56,13 +63,13 @@ pub async fn write_metadata(
 
 #[tracing::instrument(
     name = "store",
-    skip(form, data_path),
+    skip(form, query, data_path),
 )]
 pub async fn store(
     form: MultipartForm<Upload>,
+    query: web::Query<StoreQueryData>,
     data_path: web::Data<String>,
 ) -> HttpResponse {
-// ) -> Result<HttpResponse, anyhow::Error> {
     let temp_file = &form.files[0];
     let named_temp_file = &temp_file.file;
     let temp_path =  named_temp_file.path().as_os_str();
@@ -79,16 +86,40 @@ pub async fn store(
         },
         None => String::new(),
     };
-    let filename = Uuid::new_v4();
-    let filename_ext = format!("{}.{}", filename, content_type.clone());
-    let path = Path::new(data_path.as_str())
-        .join(filename_ext);
+
+    let ParsedQueryData {
+        place,
+        name,
+        owner,
+    } = extract_store_query_params(query);
+
+    let filename_id = Uuid::new_v4();
+    let filename_ext = format!("{}.{}", filename_id, content_type.clone());
+
+    let filename;
+    if name.is_empty() {
+        filename = filename_ext;
+    } else {
+        filename = name.clone();
+    }
+
+    let path;
+    if owner.is_empty() {
+        path = Path::new(data_path.as_str())
+            .join(place)
+            .join(filename);
+    } else {
+        path = Path::new(data_path.as_str())
+            .join(owner)
+            .join(place)
+            .join(filename);
+    }
 
     let size = temp_file.size;
 
-    // write_metadata(
-    //     path.clone(), size,
-    // ).await?;
+    let _ = write_metadata(
+        path.clone(), size,
+    ).await;
 
     match fs::rename(
         temp_path,
@@ -96,8 +127,6 @@ pub async fn store(
     ) {
         Ok(_) => HttpResponse::Ok().into(),
         Err(_) => HttpResponse::BadRequest().into(),
-        // Ok(_) => Ok(HttpResponse::Ok().into()),
-        // Err(_) => Err(HttpResponse::BadRequest().into()),
     }
 }
 
