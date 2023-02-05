@@ -1,5 +1,5 @@
 use std::fs;
-use std::path::{Path, PathBuf};
+use std::path::PathBuf;
 use std::io::prelude::*;
 use actix_web::{web, Result, HttpResponse};
 use actix_easy_multipart::tempfile::Tempfile;
@@ -13,6 +13,8 @@ use crate::routes::utils::{
     StoreQueryData,
     ParsedQueryData,
     extract_store_query_params,
+    compose_file_path,
+    make_directory,
 };
 
 
@@ -99,22 +101,16 @@ pub async fn store(
         filename = name.clone();
     }
 
-    let path;
-    if owner.is_empty() {
-        path = Path::new(data_path.as_str())
-            .join(place)
-            .join(filename);
-    } else {
-        path = Path::new(data_path.as_str())
-            .join(owner)
-            .join(place)
-            .join(filename);
-    }
+    let path = compose_file_path(
+        ParsedQueryData {
+            place: place.clone(),
+            owner: owner.clone(),
+            name: filename.clone(),
+        },
+        data_path.clone(),
+    );
 
-    let directory = path.parent().unwrap_or(Path::new("./"));
-    if !directory.exists() {
-        fs::create_dir_all(directory).expect("Failed to create directory");
-    }
+    make_directory(path.clone());
 
     let size = temp_file.size;
     let _ = write_metadata(
@@ -138,6 +134,7 @@ mod tests {
     async fn it_writes_metadata() -> Result<(), anyhow::Error> {
         // Setup
         use super::*;
+        use std::path::Path;
 
         let path = Path::new("./data/one").to_path_buf();
         let written = write_metadata(

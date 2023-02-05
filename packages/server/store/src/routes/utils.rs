@@ -1,3 +1,5 @@
+use std::fs;
+use std::path::{Path, PathBuf};
 use actix_web::web;
 use serde::{Deserialize, Serialize};
 
@@ -51,5 +53,43 @@ pub fn extract_store_query_params(
         place,
         name,
         owner,
+    }
+}
+
+
+
+pub fn compose_file_path(
+    query_data: ParsedQueryData,
+    data_path: web::Data<String>,
+) -> PathBuf {
+    let ParsedQueryData {
+        owner,
+        place,
+        name,
+    } = query_data;
+
+    let path;
+    if owner.is_empty() {
+        path = Path::new(data_path.as_str())
+            .join(place)
+            .join(name);
+    } else {
+        path = Path::new(data_path.as_str())
+            .join(owner)
+            .join(place)
+            .join(name);
+    }
+
+    path
+}
+
+
+
+pub fn make_directory(
+    path: PathBuf,
+) {
+    let directory = path.parent().unwrap_or(Path::new("./"));
+    if !directory.exists() {
+        fs::create_dir_all(directory).expect("Failed to create directory");
     }
 }

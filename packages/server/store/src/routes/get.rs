@@ -8,7 +8,10 @@ use crate::routes::utils::{
 };
 
 
-
+#[tracing::instrument(
+    name = "get",
+    skip(query, data_path),
+)]
 pub async fn get(
     query: web::Query<QueryData>,
     data_path: web::Data<String>,
