@@ -21,27 +21,36 @@ pub struct Upload {
 }
 
 
+const METADATA_ENDING: &str = ".metadata";
+
+pub fn compose_metadata_path (
+    path: PathBuf,
+) -> String {
+    let mut metadata_path = path.to_str().unwrap()
+        .to_owned();
+    metadata_path.push_str(METADATA_ENDING);
+
+    metadata_path
+}
+
 pub async fn write_metadata(
     path: PathBuf,
     size: usize,
-) -> Result<(), anyhow::Error> {
-    let mut metadata_path = path.to_str().unwrap()
-        .to_owned();
-    let metadata_ending: &str = ".metadata";
-    metadata_path.push_str(metadata_ending);
-
+) -> Result<bool, anyhow::Error> {
+    let metadata_path = compose_metadata_path(path.clone());
     let mut file = fs::File::create(metadata_path.clone())?;
 
-    let stored_at = Utc::now().timestamp().milliseconds().as_seconds_f64();
+    let stored_at = Utc::now().timestamp_millis();
     let value = json!({
         "storedAt": stored_at,
         "size": size,
     });
 
-    let bytes = value.as_str().unwrap().as_bytes();
+    let bytes_string = value.clone().to_string();
+    let bytes = bytes_string.as_bytes();
     file.write_all(bytes)?;
 
-    Ok(())
+    Ok(true)
 }
 
 
@@ -89,5 +98,30 @@ pub async fn store(
         Err(_) => HttpResponse::BadRequest().into(),
         // Ok(_) => Ok(HttpResponse::Ok().into()),
         // Err(_) => Err(HttpResponse::BadRequest().into()),
+    }
+}
+
+
+
+#[cfg(test)]
+mod tests {
+    #[tokio::test]
+    async fn it_writes_metadata() -> Result<(), anyhow::Error> {
+        // Setup
+        use super::*;
+
+        let path = Path::new("./data/one").to_path_buf();
+        let written = write_metadata(
+            path.clone(), 200,
+        ).await.expect("couldn't write metadata");
+
+        // Assert
+        assert_eq!(written, true);
+
+        // Cleanup
+        let metadata_path = compose_metadata_path(path.clone());
+        std::fs::remove_file(metadata_path)?;
+
+        Ok(())
     }
 }
