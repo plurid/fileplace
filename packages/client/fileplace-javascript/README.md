@@ -17,7 +17,7 @@
 
 
 <h3 align="center">
-    file store
+    Cloud Service for Centralized File Store
 </h3>
 
 
@@ -26,20 +26,23 @@
 
 
 
-`fileplace` is a file store
+`fileplace` is a centralized file store intended to run in a cloud context.
+
+The `fileplace server` consists of the `store`, the API handling files operations, and the `web`, a files viewer.
+
+The `store` can be called from the clients for:
+
++ `Go`
++ `JavaScript`/`TypeScript`
++ `Python`
++ `Rust`
 
 
 
 ### Contents
 
-+ [About](#about)
 + [Packages](#packages)
 + [Codeophon](#codeophon)
-
-
-
-## About
-
 
 
 
