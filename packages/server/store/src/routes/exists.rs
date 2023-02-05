@@ -21,7 +21,7 @@ pub async fn exists(
         data_path,
     );
 
-    if !path.exists() {
+    if !path.exists() || !path.is_file() {
         return HttpResponse::NotFound().into();
     }
 
