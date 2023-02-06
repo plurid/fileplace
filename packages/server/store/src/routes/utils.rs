@@ -2,6 +2,7 @@ use std::fs;
 use std::path::{Path, PathBuf};
 use actix_web::web;
 use serde::{Deserialize, Serialize};
+use urlencoding::decode;
 
 
 
@@ -37,9 +38,13 @@ pub struct ParsedQueryData {
 pub fn extract_query_params(
     query: web::Query<QueryData>,
 ) -> ParsedQueryData {
-    let place = query.place.clone();
-    let name = query.name.clone();
-    let owner = query.owner.clone().unwrap_or(String::new());
+    let place = decode(query.place.clone().as_str()).unwrap().to_string();
+    let name = decode(query.name.clone().as_str()).unwrap().to_string();
+    let owner = decode(
+        query.owner.clone().unwrap_or(String::new()).as_str(),
+        )
+        .unwrap()
+        .to_string();
 
     ParsedQueryData {
         place,

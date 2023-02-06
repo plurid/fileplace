@@ -7,6 +7,7 @@ use crate::routes::utils::{
     QueryData,
     ParsedQueryData,
     extract_query_params,
+    METADATA_ENDING,
 };
 
 
@@ -35,7 +36,10 @@ pub async fn metadata(
             .join(owner).join(place).join(name);
     }
 
-    let data: String = String::from_utf8_lossy(&fs::read(address)?).parse()?;
+    let mut metadata_path = address.clone().into_os_string().into_string().unwrap();
+    metadata_path.push_str(METADATA_ENDING);
+
+    let data: String = String::from_utf8_lossy(&fs::read(metadata_path)?).parse()?;
     let value: Value = serde_json::from_str(&data)?;
 
     Ok(web::Json(value.clone()))
