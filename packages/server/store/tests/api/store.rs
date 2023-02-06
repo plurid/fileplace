@@ -9,7 +9,7 @@ const TEST_FILE_PNG: &str = "./tests/api/assets/file.png";
 async fn store_file() {
     let app = spawn_app().await;
 
-    let response = app.store("one", "two.png", TEST_FILE_PNG).await;
+    let response = app.store("store/one", "two.png", TEST_FILE_PNG).await;
 
     assert_eq!(
         200,
@@ -17,6 +17,6 @@ async fn store_file() {
         "The API did not succeed with 200 OK",
     );
 
-    let _ = std::fs::remove_file("./data/one/two.png");
-    let _ = std::fs::remove_file("./data/one/two.png.metadata");
+    let _ = std::fs::remove_file("./data/store/one/two.png");
+    let _ = std::fs::remove_file("./data/store/one/two.png.metadata");
 }
