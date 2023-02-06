@@ -1,6 +1,8 @@
 // #region imports
     // #region libraries
-    import React from 'react';
+    import React, {
+        useEffect,
+    } from 'react';
 
     import {
         PluridLink,
@@ -8,6 +10,13 @@
         PluridReactComponent,
     } from '@plurid/plurid-react';
     // #endregion libraries
+
+
+    // #region external
+    import {
+        getPlaces,
+    } from '~kernel-services/logic/files';
+    // #endregion external
 
 
     // #region internal
@@ -27,6 +36,18 @@ const Page: PluridReactComponent<{}> = (
     // const {
     //     plurid,
     // } = properties;
+
+
+    // #region effects
+    useEffect(() => {
+        const load = async () => {
+            const places = await getPlaces();
+            console.log( places);
+        }
+
+        load();
+    }, []);
+    // #endregion effects
 
 
     /** render */
