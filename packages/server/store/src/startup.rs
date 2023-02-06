@@ -5,6 +5,7 @@ use actix_web::{
     App,
 };
 use actix_web::dev::Server;
+use actix_cors::Cors;
 use tracing_actix_web::TracingLogger;
 
 use crate::configuration::Settings;
@@ -60,8 +61,15 @@ pub async fn run(
     data_path: String,
 ) -> Result<Server, anyhow::Error> {
     let server = HttpServer::new(move || {
+            let cors = Cors::default()
+                .allowed_origin_fn(|origin, _req_head| {
+                    true
+                })
+                .max_age(3600);
+
             App::new()
                 .wrap(TracingLogger::default())
+                .wrap(cors)
 
                 .route("/get", web::get().to(get))
                 .route("/all", web::get().to(all))
