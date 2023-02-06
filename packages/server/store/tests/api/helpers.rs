@@ -6,6 +6,9 @@ use fileplace_store::startup::Application;
 
 
 
+pub const TEST_FILE_PNG: &str = "./tests/api/assets/file.png";
+
+
 pub struct TestApp {
     pub address: String,
     pub port: u16,
@@ -29,6 +32,24 @@ impl TestApp {
             .expect("Failed to execute request.")
     }
 
+    pub async fn metadata(
+        &self,
+        place: &str,
+        name: &str,
+    ) -> reqwest::Response {
+        let address = &format!(
+            "{}/metadata?place={}&name={}",
+            &self.address, encode(place), encode(name),
+        );
+
+        self.api_client
+            .get(address)
+            .header("Content-Type", "application/json")
+            .send()
+            .await
+            .expect("Failed to execute request.")
+    }
+
     pub async fn store(
         &self,
         place: &str,
@@ -45,11 +66,13 @@ impl TestApp {
         let form = multipart::Form::new()
             .part("files[]", file_part);
 
+        let address = &format!(
+            "{}/store?place={}&name={}",
+            &self.address, encode(place), encode(name),
+        );
+
         self.api_client
-            .post(&format!(
-                "{}/store?place={}&name={}",
-                &self.address, encode(place), encode(name),
-            ))
+            .post(address)
             .multipart(form)
             .send()
             .await

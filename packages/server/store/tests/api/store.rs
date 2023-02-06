@@ -1,8 +1,5 @@
-use crate::helpers::spawn_app;
+use crate::helpers::{spawn_app, TEST_FILE_PNG};
 
-
-
-const TEST_FILE_PNG: &str = "./tests/api/assets/file.png";
 
 
 #[tokio::test]
