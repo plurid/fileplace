@@ -14,6 +14,11 @@ curl -v http://127.0.0.1:56165/metadata?owner=one&place=two&name="a_file.png"
 curl -v http://127.0.0.1:56165/metadata?place=two&name="a_file.png"
 
 
+# Places
+
+curl -v http://127.0.0.1:56165/places
+
+
 # Exists
 
 curl -v http://127.0.0.1:56165/exists?owner=one&place=two&name="a_file.png"
