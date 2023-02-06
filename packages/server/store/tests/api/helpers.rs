@@ -1,5 +1,6 @@
 use urlencoding::encode;
 use reqwest::multipart;
+use serde_json::Value;
 
 use fileplace_store::configuration::get_configuration;
 use fileplace_store::startup::Application;
@@ -17,6 +18,38 @@ pub struct TestApp {
 
 
 impl TestApp {
+    pub async fn all(
+        &self,
+        place: &str,
+    ) -> reqwest::Response {
+        let address = &format!(
+            "{}/all?place={}",
+            &self.address, encode(place),
+        );
+
+        self.api_client
+            .get(address)
+            .header("Content-Type", "application/json")
+            .send()
+            .await
+            .expect("Failed to execute request.")
+    }
+
+    pub async fn get(
+        &self,
+        place: &str,
+        name: &str,
+    ) -> reqwest::Response {
+        self.api_client
+            .get(&format!(
+                "{}/get?place={}&name={}",
+                &self.address, encode(place), encode(name),
+            ))
+            .send()
+            .await
+            .expect("Failed to execute request.")
+    }
+
     pub async fn exists(
         &self,
         place: &str,
@@ -45,6 +78,23 @@ impl TestApp {
         self.api_client
             .get(address)
             .header("Content-Type", "application/json")
+            .send()
+            .await
+            .expect("Failed to execute request.")
+    }
+
+    pub async fn remove(
+        &self,
+        place: &str,
+        name: &str,
+    ) -> reqwest::Response {
+        let address = &format!(
+            "{}/remove?place={}&name={}",
+            &self.address, encode(place), encode(name),
+        );
+
+        self.api_client
+            .post(address)
             .send()
             .await
             .expect("Failed to execute request.")
@@ -108,4 +158,15 @@ pub async fn spawn_app() -> TestApp {
     };
 
     test_app
+}
+
+
+
+pub async fn get_json(
+    response: reqwest::Response,
+) -> Value {
+    let body = response.text().await.unwrap().to_owned();
+    let json: Value = serde_json::from_str(body.as_str()).unwrap();
+
+    json
 }

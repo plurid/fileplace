@@ -1,4 +1,7 @@
 mod helpers;
-mod store;
+mod all;
 mod exists;
+mod get;
 mod metadata;
+mod remove;
+mod store;

@@ -1,6 +1,10 @@
 use serde_json::Value;
 
-use crate::helpers::{spawn_app, TEST_FILE_PNG};
+use crate::helpers::{
+    TEST_FILE_PNG,
+    spawn_app,
+    get_json,
+};
 
 
 
@@ -18,13 +22,12 @@ async fn gets_metadata() {
         "The API did not succeed with 200 OK",
     );
 
-    let body = response.text().await.unwrap().to_owned();
-    let json: Value = serde_json::from_str(body.as_str()).unwrap();
+    let json = get_json(response).await;
 
     let size = json.get("size").and_then(Value::as_i64).unwrap();
     assert_eq!(
-        size,
         99007,
+        size,
     );
 
     let _ = std::fs::remove_file("./data/metadata/one/two.png");
