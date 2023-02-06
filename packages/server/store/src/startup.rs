@@ -12,6 +12,7 @@ use crate::routes::{
     get,
     all,
     metadata,
+    places,
     remove,
     store,
     exists,
@@ -65,6 +66,7 @@ pub async fn run(
                 .route("/get", web::get().to(get))
                 .route("/all", web::get().to(all))
                 .route("/metadata", web::get().to(metadata))
+                .route("/places", web::get().to(places))
                 .route("/remove", web::post().to(remove))
                 .route("/store", web::post().to(store))
                 .route("/exists", web::get().to(exists))

@@ -23,6 +23,7 @@ tracing-log = "0.1"
 tracing-subscriber = { version = "0.3", features = ["registry", "env-filter"] }
 urlencoding = "2.1.2"
 uuid = { version = "1", features = ["v4"] }
+walkdir = "2.3.2"
 
 
 [dev-dependencies.reqwest]
