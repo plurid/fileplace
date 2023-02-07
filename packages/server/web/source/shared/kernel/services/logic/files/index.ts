@@ -26,4 +26,20 @@ export const getPlaces = async () => {
         return [];
     }
 }
+
+
+export const getPlaceFiles = async (
+    place: string,
+) => {
+    try {
+        const response = await fetch(
+            FILEPLACE_STORE_ENDPOINT + `/all?place=${encodeURIComponent(place)}`,
+        );
+        const data = await response.json();
+
+        return data.files;
+    } catch (error) {
+        return [];
+    }
+}
 // #endregion module

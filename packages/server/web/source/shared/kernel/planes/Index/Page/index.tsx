@@ -15,6 +15,7 @@
     // #region external
     import {
         getPlaces,
+        getPlaceFiles,
     } from '~kernel-services/logic/files';
     // #endregion external
 
@@ -41,8 +42,8 @@ const Page: PluridReactComponent<{}> = (
     // #region effects
     useEffect(() => {
         const load = async () => {
-            const places = await getPlaces();
-            console.log( places);
+            // const places = await getPlaces();
+            // const oneFiles = await getPlaceFiles('one/two');
         }
 
         load();
