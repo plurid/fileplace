@@ -24,9 +24,9 @@
         PluridLink,
     } from '@plurid/plurid-react';
 
-    // import {
-    //     EntityViewRefAttributes,
-    // } from '@plurid/plurid-ui-components-react';
+    import {
+        EntityViewRefAttributes,
+    } from '@plurid/plurid-ui-components-react';
     // #endregion libraries
 
 
@@ -204,8 +204,7 @@ const Files: React.FC<FilesProperties> = (
 
 
     // #region references
-    const entityView = useRef<any | null>(null);
-    // const entityView = useRef<EntityViewRefAttributes | null>(null);
+    const entityView = useRef<EntityViewRefAttributes | null>(null);
     // #endregion references
 
 
@@ -266,7 +265,7 @@ const Files: React.FC<FilesProperties> = (
 
                 rowTemplate={rowTemplate}
                 rowsHeader={rowsHeader}
-                noRows="no biomolecules"
+                noRows="no files"
 
                 abstractRowRenderer={abstractRowRenderer}
                 rowRenderFields={rowRenderFields}

@@ -17,6 +17,8 @@
         getPlaces,
         getPlaceFiles,
     } from '~kernel-services/logic/files';
+
+    import Files from '~kernel-components/Files';
     // #endregion external
 
 
