@@ -12,6 +12,7 @@
 // #region module
 const {
     containers: {
+        DashboardsRenderer: PluridDashboardsRenderer,
         EntityView: PluridEntityView,
     },
 } = pluridal;
@@ -27,6 +28,7 @@ const {
 
 // #region exports
 export {
+    PluridDashboardsRenderer,
     PluridEntityView,
 
     PluridCopyableLine,
