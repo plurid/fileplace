@@ -106,7 +106,6 @@ const Page: React.FC<PageProperties> = (
                 compactSelectors={stateCompactSelectors}
                 rendererID={plurid.plane.planeID}
                 identonym={stateIdentonym}
-                usageType="PRIVATE_USAGE"
                 brandingName="fileplace"
                 brandingNameStyle={{
                     fontWeight: 'bolder',
