@@ -43,7 +43,7 @@
         "@plurid/plurid-react": "^0.0.0-32",
         "@plurid/plurid-react-server": "^0.0.0-15",
         "@plurid/plurid-themes": "^0.0.0-2",
-        "@plurid/plurid-ui-components-react": "^0.0.0-20",
+        "@plurid/plurid-ui-components-react": "^0.0.0-21",
         "@plurid/plurid-ui-state-react": "^0.0.0-10",
         "@reduxjs/toolkit": "^1.9.2",
         "body-parser": "^1.20.1",
