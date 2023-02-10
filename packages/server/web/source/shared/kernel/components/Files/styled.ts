@@ -16,5 +16,7 @@ export interface IStyledFiles {
 }
 
 export const StyledFiles = styled.div<IStyledFiles>`
+    padding: 2rem;
+    height: 100%;
 `;
 // #region module
