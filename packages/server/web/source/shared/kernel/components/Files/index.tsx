@@ -3,6 +3,7 @@
     import React, {
         useRef,
         useState,
+        useEffect,
     } from 'react';
 
     import {
@@ -27,6 +28,10 @@
     import {
         EntityViewRefAttributes,
     } from '@plurid/plurid-ui-components-react';
+
+    import {
+        uuid,
+    } from '@plurid/plurid-functions';
     // #endregion libraries
 
 
@@ -35,6 +40,11 @@
         PluridEntityView,
         PluridCopyableLine,
     } from '~kernel-services/styled';
+
+    import {
+        getPlaces,
+        getPlaceFiles,
+    } from '~kernel-services/logic/files';
 
     import { AppState } from '~kernel-services/state/store';
     import StateContext from '~kernel-services/state/context';
@@ -173,6 +183,50 @@ export const abstractRowRenderer = (
 }
 
 
+export const composeRenderFiles = (
+    data: Record<string, string[]>,
+    root: string,
+) => {
+    const files: RenderFile[] = [];
+
+    if (root === '/') {
+        for (const key of Object.keys(data)) {
+            if (!key.includes('/')) {
+                const file: RenderFile = {
+                    id: uuid.multiple(),
+                    name: key,
+                    generated_at: Date.now(),
+                    link: '',
+                    pluridlink: '',
+                    type: 'place',
+                };
+                files.push(file);
+            }
+        }
+    } else {
+        Object.entries(data).forEach(
+            ([key, placeFiles]) => {
+                if (key === root) {
+                    for (const filename of placeFiles) {
+                        const file: RenderFile = {
+                            id: uuid.multiple(),
+                            name: filename,
+                            generated_at: Date.now(),
+                            link: '',
+                            pluridlink: '',
+                            type: 'file',
+                        };
+                        files.push(file);
+                    }
+                }
+            },
+        );
+    }
+
+    return files;
+}
+
+
 
 export interface FilesOwnProperties {
 }
@@ -201,8 +255,6 @@ const Files: React.FC<FilesProperties> = (
         stateInteractionTheme,
         // #endregion state
     } = properties;
-
-    const files: RenderFile[] = [];
     // #endregion properties
 
 
@@ -249,7 +301,37 @@ const Files: React.FC<FilesProperties> = (
         filterIDs,
         setFilterIDs,
     ] = useState<string[]>([]);
+
+    const [
+        root,
+        setRoot,
+    ] = useState('/');
+
+    const [
+        files,
+        setFiles,
+    ] = useState<RenderFile[]>([]);
     // #endregion state
+
+
+    // #region effects
+    useEffect(() => {
+        const load = async () => {
+            const places = await getPlaces();
+            const data = {};
+
+            for (const place of places) {
+                const files = await getPlaceFiles(place);
+                data[place] = files;
+            }
+
+            const renderFiles = composeRenderFiles(data, root);
+            setFiles(renderFiles);
+        }
+
+        load();
+    }, []);
+    // #endregion effects
 
 
     // #region render

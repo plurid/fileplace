@@ -14,14 +14,14 @@
 
 
 // #region module
-export const getPlaces = async () => {
+export const getPlaces = async (): Promise<string[]> => {
     try {
         const response = await fetch(
             FILEPLACE_STORE_ENDPOINT + '/places',
         );
         const data = await response.json();
 
-        return data.places;
+        return data.places || [];
     } catch (error) {
         return [];
     }
@@ -30,14 +30,14 @@ export const getPlaces = async () => {
 
 export const getPlaceFiles = async (
     place: string,
-) => {
+): Promise<string[]> => {
     try {
         const response = await fetch(
             FILEPLACE_STORE_ENDPOINT + `/all?place=${encodeURIComponent(place)}`,
         );
         const data = await response.json();
 
-        return data.files;
+        return data.files || [];
     } catch (error) {
         return [];
     }
