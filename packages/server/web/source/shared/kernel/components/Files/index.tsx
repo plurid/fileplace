@@ -53,6 +53,16 @@
 
 
 // #region module
+export interface RenderFile {
+    id: string;
+    name: string;
+    link: string;
+    generated_at: number;
+    pluridlink: string;
+    type: 'file' | 'place';
+}
+
+
 export const rowsHeader = (
     <>
         <div />
@@ -85,7 +95,7 @@ export const renderDate = (
         return '';
     }
 
-    return new Date(value * 1_000).toLocaleString();
+    return new Date(value).toLocaleString();
 }
 
 export const abstractRowRenderer = (
@@ -124,15 +134,6 @@ export const abstractRowRenderer = (
                         key={key}
                     >
                         {renderDate(data.generated_at)}
-                    </div>
-                );
-                break;
-            case 'lastRun':
-                renderColumns.push(
-                    <div
-                        key={key}
-                    >
-                        {renderDate(data.last_run)}
                     </div>
                 );
                 break;
@@ -200,6 +201,8 @@ const Files: React.FC<FilesProperties> = (
         stateInteractionTheme,
         // #endregion state
     } = properties;
+
+    const files: RenderFile[] = [];
     // #endregion properties
 
 
@@ -257,7 +260,7 @@ const Files: React.FC<FilesProperties> = (
             <PluridEntityView
                 ref={entityView}
 
-                entities={[]}
+                entities={files}
                 searchFields={['name']}
 
                 generalTheme={stateGeneralTheme}
